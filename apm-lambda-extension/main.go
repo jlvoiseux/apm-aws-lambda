@@ -143,11 +143,13 @@ func main() {
 						return
 					case agentData := <-agentDataChannel:
 						backgroundDataSendWg.Add(1)
+						log.Println("ADDING TO WAITGROUP")
 						err := extension.PostToApmServer(client, agentData, config)
 						if err != nil {
 							log.Printf("Error sending to APM server, skipping: %v", err)
 						}
 						backgroundDataSendWg.Done()
+						log.Println("WAITGROUP DONE")
 					}
 				}
 			}()
@@ -194,7 +196,9 @@ func main() {
 				log.Println("Time expired waiting for agent signal or runtimeDone event")
 			}
 
+			log.Println("WAITGROUP WAITING")
 			backgroundDataSendWg.Wait()
+			log.Println("WAITGROUP RELEASED MAIN THREAD")
 			if config.SendStrategy == extension.SyncFlush {
 				// Flush APM data now that the function invocation has completed
 				extension.FlushAPMData(client, agentDataChannel, config)
