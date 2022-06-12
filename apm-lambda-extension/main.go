@@ -135,6 +135,9 @@ func processEvent(
 	invocationCtx, invocationCancel := context.WithCancel(ctx)
 	defer invocationCancel()
 
+	// Modification for demonstration purposes
+	extension.Log.Infof("It's a beautiful day outside...")
+
 	// call Next method of extension API.  This long polling HTTP method
 	// will block until there's an invocation of the function
 	extension.Log.Infof("Waiting for next event...")
